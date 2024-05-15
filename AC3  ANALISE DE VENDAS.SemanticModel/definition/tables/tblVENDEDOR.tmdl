@@ -1,0 +1,66 @@
+table tblVENDEDOR
+	lineageTag: 6c41c01a-9a28-4fe9-bb43-d7a5ee34d25a
+
+	column idVendedor
+		dataType: int64
+		formatString: 0
+		lineageTag: 8c3ad806-b419-44c5-950f-608eeef9b82e
+		summarizeBy: none
+		sourceColumn: idVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column nomeVendedor
+		dataType: string
+		lineageTag: b67c341a-afa1-4b53-999d-31578bc66978
+		summarizeBy: none
+		sourceColumn: nomeVendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column estadoCivil
+		dataType: string
+		lineageTag: 27456141-794f-441b-ac6f-05c6c7b19c82
+		summarizeBy: none
+		sourceColumn: estadoCivil
+
+		annotation SummarizationSetBy = Automatic
+
+	column Genero
+		dataType: string
+		lineageTag: ad91cdf1-7ad6-456d-9fa9-0b29cc174045
+		summarizeBy: none
+		sourceColumn: Genero
+
+		annotation SummarizationSetBy = Automatic
+
+	column Idade
+		dataType: int64
+		formatString: 0
+		lineageTag: a7bbc341-47df-43d3-b074-cd08310e2937
+		summarizeBy: none
+		sourceColumn: Idade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Loja
+		dataType: int64
+		formatString: 0
+		lineageTag: 43a5971b-3bfa-42d2-ab51-8141d8145e10
+		summarizeBy: none
+		sourceColumn: Loja
+
+		annotation SummarizationSetBy = Automatic
+
+	partition tblVENDEDOR-5980b6fb-a335-454f-80d4-7c2d87b3c359 = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\robso\OneDrive\Área de Trabalho\PROJETO POWER BI IMPACTA\ProjetoPowerBi_Faculdade_Impact\baseVendas_Normalizado.xlsx"), null, true),
+				    tblVENDEDOR_Table = Fonte{[Item="tblVENDEDOR",Kind="Table"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(tblVENDEDOR_Table,{{"idVendedor", Int64.Type}, {"nomeVendedor", type text}, {"estadoCivil", type text}, {"Genero", type text}, {"Idade", Int64.Type}, {"Loja", Int64.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+

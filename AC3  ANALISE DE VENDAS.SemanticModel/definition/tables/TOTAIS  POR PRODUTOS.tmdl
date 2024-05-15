@@ -1,0 +1,167 @@
+table 'TOTAIS  POR PRODUTOS'
+	lineageTag: 3808042c-8260-4d64-b34d-094bf0351b54
+
+	measure 'META LUCRO PRODUTO' = 1000000
+		formatString: 0
+		lineageTag: f5750660-ce71-4575-9866-e24392d013f8
+
+	measure 'VALOR MINIMO LUCRO' = 100000
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 905f390c-b8ba-404b-96f1-61e8ddafafc5
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'VALOR MAXIMO LUCRO' = 1200000
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: ec1b476f-c01b-4619-a78b-0123158a21f0
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'MAX QUANT PEDIDO' = 70000
+		formatString: 0
+		lineageTag: afc4c92e-3c11-4b65-aa75-886efda95ac4
+
+	measure 'MIN QUANT PEDIDO' = 6000
+		formatString: 0
+		lineageTag: 3f3c2524-21cd-4677-8929-428d4eae6414
+
+	measure 'META QUANT PEDIDO' = 30000
+		formatString: 0
+		lineageTag: d69bac4b-e5e8-4c1d-8ca7-416960d42bee
+
+	column descricaoProduto
+		dataType: string
+		lineageTag: 8f51007a-d30f-4fda-a7f9-30b1480eff1e
+		summarizeBy: none
+		isNameInferred
+		isDataTypeInferred
+		sourceColumn: tblPRODUTO[descricaoProduto]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'LUCRO TOTAL'
+		dataType: decimal
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 00ad4ff6-2284-469a-8eee-555d61e1665e
+		summarizeBy: sum
+		isNameInferred
+		isDataTypeInferred
+		sourceColumn: [LUCRO TOTAL]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Nº PEDIDOS'
+		dataType: int64
+		formatString: #,0
+		lineageTag: e2bce63e-7772-4b5c-987a-d6ebe0b71264
+		summarizeBy: sum
+		isNameInferred
+		isDataTypeInferred
+		sourceColumn: [Nº PEDIDOS]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'INDICADOR LUCRO TOTAL' = IF([LUCRO TOTAL]>=500000,UNICHAR(9650),UNICHAR(9660))
+		dataType: string
+		lineageTag: 1b4c3a47-c559-4b9e-9018-c417aff1866c
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'INDICADOR STATUS' =
+			IF ([LUCRO TOTAL]>=700000,"BOM",
+			                    IF ([LUCRO TOTAL] >= 400000,"REGULAR",
+			                    IF ([LUCRO TOTAL] < 400000, "RUIM")))
+		dataType: string
+		lineageTag: d9887c60-37e2-40cc-87ec-a66f946e69f6
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMAGEM = RELATED(INDICADOR[IMAGEM])
+		dataType: string
+		lineageTag: 395baa20-e2d9-4caf-a2ac-166cba851780
+		dataCategory: ImageUrl
+		summarizeBy: none
+		isDataTypeInferred
+		sortByColumn: ORDEM
+
+		annotation SummarizationSetBy = Automatic
+
+	column ORDEM = RELATED(INDICADOR[ORDEM])
+		dataType: string
+		lineageTag: 6dd71d51-e836-4f4b-a1ea-63689ee1590d
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column '% META' = 'TOTAIS  POR PRODUTOS'[LUCRO TOTAL]/'TOTAIS  POR PRODUTOS'[META LUCRO PRODUTO]
+		dataType: decimal
+		formatString: #,0.00%;-#,0.00%;#,0.00%
+		lineageTag: a03aa9d6-07d1-4642-b3d7-c1db1ceafc1c
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column '% TOTAIS' = 'TOTAIS  POR PRODUTOS'[LUCRO TOTAL]/SUM('TOTAIS  POR PRODUTOS'[LUCRO TOTAL])
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e7e85bf6-0e47-46eb-81a5-d4f3183c3c5b
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RANKING X' = RANKX('TOTAIS  POR PRODUTOS','TOTAIS  POR PRODUTOS'[% TOTAIS])
+		dataType: int64
+		lineageTag: c5780e06-7756-4359-a45c-610a09ccb48f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'FORMAT RANK' = 'TOTAIS  POR PRODUTOS'[RANKING X] &"°"
+		dataType: string
+		lineageTag: e34b9cf9-4e90-46f7-9f02-c72a4552a0df
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'RANK EQ CRESC OU DECRES' = RANK.EQ('TOTAIS  POR PRODUTOS'[LUCRO TOTAL],'TOTAIS  POR PRODUTOS'[LUCRO TOTAL],DESC)
+		dataType: int64
+		formatString: 0
+		lineageTag: cdfa1c95-8cf1-433b-8a46-d6fa43892dc6
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'PERC ACUMULADO SUM X' =
+			SUMX(FILTER('TOTAIS  POR PRODUTOS',
+			                       'TOTAIS  POR PRODUTOS'[FORMAT RANK]
+			                       <= EARLIER('TOTAIS  POR PRODUTOS'[FORMAT RANK])), 'TOTAIS  POR PRODUTOS'[% TOTAIS])
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: e5d5ffe2-7fbd-4bef-b8e0-5b0680d0117f
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'TOTAIS  POR PRODUTOS-c5fab0e6-9351-428d-95bc-3d3859cfbc54' = calculated
+		mode: import
+		source =
+				SUMMARIZE(tblVENDAS,tblPRODUTO[descricaoProduto],"LUCRO TOTAL",
+				                       MEDIDAS[LUCRO TOTAL],"Nº PEDIDOS",
+				                       MEDIDAS[N° DE PEDIDOS])
+
+	annotation PBI_Id = b05ffe31d5784a9fadb5eb3c68dd0efa
+

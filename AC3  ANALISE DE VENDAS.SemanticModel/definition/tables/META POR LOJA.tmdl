@@ -1,0 +1,51 @@
+table 'META POR LOJA'
+	lineageTag: 827a2433-9586-4e87-8d63-d5404b34ecde
+
+	column LOJA
+		dataType: string
+		lineageTag: ae54ea2b-9f8f-4bd5-8825-0f47d53d7c24
+		summarizeBy: none
+		sourceColumn: LOJA
+
+		annotation SummarizationSetBy = Automatic
+
+	column META
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 34358a47-9a0a-4198-8982-142f4b8e292b
+		summarizeBy: sum
+		sourceColumn: META
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'MAXIMO LOJA' = 1000000
+		dataType: int64
+		formatString: 0
+		lineageTag: a72a7c36-83d9-4084-95c1-d87d88f74d96
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MINIMO LOJA' = 150000
+		dataType: int64
+		formatString: 0
+		lineageTag: 29d71162-3f04-4cc1-a231-8bb72ce2b86d
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'META POR LOJA-415caa03-f5db-46a3-a416-a1a0f907416a' = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45W8snPSlQwMFTSUVIIUlEw1jMwMABhHQMDBaVYHZi8EVTeUM8Uq7wxXB67fhMC8qYE5M0IyJsTkLcgIG+JX97QACqP1feGhthkYwE=", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [LOJA = _t, META = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"LOJA", type text}, {"META", Currency.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+

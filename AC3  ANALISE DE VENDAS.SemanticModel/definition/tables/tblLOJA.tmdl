@@ -1,0 +1,101 @@
+table tblLOJA
+	lineageTag: 55e29cbf-5da4-4116-9923-cd10dafb98ac
+
+	column idLoja
+		dataType: int64
+		formatString: 0
+		lineageTag: 2d22ea4e-1505-4369-b9ef-d67b55c29c8d
+		summarizeBy: none
+		sourceColumn: idLoja
+
+		annotation SummarizationSetBy = Automatic
+
+	column DescricaoLoja
+		dataType: string
+		lineageTag: a6352d4f-e43e-4239-a1e6-3e2f1ce275e3
+		summarizeBy: none
+		sourceColumn: DescricaoLoja
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cidade
+		dataType: string
+		lineageTag: 88cd37f6-d1c1-4fd8-baa4-78b1dc8d11a9
+		summarizeBy: none
+		sourceColumn: Cidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column Uf
+		dataType: string
+		lineageTag: 30bd09d1-a97e-45df-86d8-3132b79c1568
+		summarizeBy: none
+		sourceColumn: Uf
+
+		annotation SummarizationSetBy = Automatic
+
+	column CIDADE/UF
+		dataType: string
+		lineageTag: d30a3d9c-7ec7-445d-8d4a-2c73a2f33f80
+		summarizeBy: none
+		sourceColumn: CIDADE/UF
+
+		annotation SummarizationSetBy = Automatic
+
+	column LATITUDE = RELATED(tblLatitudeLongitude[LATUTUDE])
+		dataType: double
+		lineageTag: 2fbdff83-f0a7-41ab-9d2c-3e0767f6f4a9
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LONGITUDE = RELATED(tblLatitudeLongitude[LONGITUDE])
+		dataType: double
+		lineageTag: a7e20e76-9aed-4879-b5f4-764357beac8a
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'IMAGEM UF' = RELATED(tblLatitudeLongitude[MAPA UF])
+		dataType: string
+		lineageTag: e5be1c46-768d-436c-8ca9-0a9f60bb76aa
+		dataCategory: ImageUrl
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy LOCALIDADE
+		lineageTag: cc8994da-b8fc-4391-99b3-7e71e9d6bbfd
+
+		level Uf
+			lineageTag: 9314fbb8-6bfc-4ce4-85d7-1debd8cbe377
+			column: Uf
+
+		level Cidade
+			lineageTag: ad8f2c06-47fe-4619-88aa-ddbdf2408c10
+			column: Cidade
+
+		level DescricaoLoja
+			lineageTag: a7263f1d-0b4f-4538-837d-cab98cbf9b1c
+			column: DescricaoLoja
+
+	partition tblLOJA-b2958a6a-052a-4f3a-92df-7404b334c125 = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\robso\OneDrive\Área de Trabalho\PROJETO POWER BI IMPACTA\ProjetoPowerBi_Faculdade_Impact\baseVendas_Normalizado.xlsx"), null, true),
+				    tblLOJA_Table = Fonte{[Item="tblLOJA",Kind="Table"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(tblLOJA_Table,{{"idLoja", Int64.Type}, {"DescricaoLoja", type text}, {"Cidade", type text}, {"Uf", type text}}),
+				    #"Coluna Mesclada Inserida" = Table.AddColumn(#"Tipo Alterado", "CIDADE/UF", each Text.Combine({[Cidade], [Uf]}, "/"), type text)
+				in
+				    #"Coluna Mesclada Inserida"
+
+	annotation PBI_ResultType = Table
+

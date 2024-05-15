@@ -1,0 +1,95 @@
+table TblCALENDARIO
+	lineageTag: c596890a-47dc-41c8-9c97-dc11f780c56d
+
+	column DATA
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 6cd71df6-0535-49d3-886d-98f03b0ec472
+		summarizeBy: none
+		isDataTypeInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: 0de848d5-3d8d-400a-8fa8-7fcc7044f66a
+			defaultHierarchy: LocalDateTable_8cce442f-c6cf-4c9d-bc7b-6e59dfabd6fd.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DIA = DAY(TblCALENDARIO[DATA])
+		dataType: int64
+		formatString: 0
+		lineageTag: e1af04b6-78d9-4926-a287-61b700335b0f
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column MÊS = MONTH(TblCALENDARIO[DATA])
+		dataType: int64
+		formatString: 0
+		lineageTag: 9e135a60-e5e4-46d9-b2b4-edf2fc474d85
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column ANO = YEAR(TblCALENDARIO[DATA])
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c0a6e1f-51af-483d-9e34-ca0d642c3599
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nomedomês = UPPER(FORMAT(TblCALENDARIO[DATA],"mmmm"))
+		dataType: string
+		lineageTag: 7450409d-870f-47f6-8d7e-de8988079a20
+		summarizeBy: none
+		isDataTypeInferred
+		sortByColumn: MÊS
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'DIA DA SEMANA' = WEEKDAY(TblCALENDARIO[DATA])
+		dataType: int64
+		formatString: 0
+		lineageTag: fae8fb3c-dcfd-4c1b-9bd9-9a73418c2455
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'NOME DIA SEMANA' = UPPER(FORMAT(TblCALENDARIO[DATA],"DDDD"))
+		dataType: string
+		lineageTag: 94651630-fa43-40cf-94b5-3af969b0d9f9
+		summarizeBy: none
+		isDataTypeInferred
+		sortByColumn: 'DIA DA SEMANA'
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy TEMPO
+		lineageTag: f3456284-a65b-491f-94fd-baf8b7db2ead
+
+		level ANO
+			lineageTag: 8a7681d3-c992-4cf1-8ee4-31bd7aa62c09
+			column: ANO
+
+		level Nomedomês
+			lineageTag: 608dc62b-72b4-40a2-a5ba-a0de0813c7fe
+			column: Nomedomês
+
+		level 'NOME DIA SEMANA'
+			lineageTag: 6220bbcd-90d8-4c97-b036-85387ddc8db0
+			column: 'NOME DIA SEMANA'
+
+	partition TblCALENDARIO-41672abb-8bd4-4dae-beac-525dd6c99575 = calculated
+		mode: import
+		source = CALENDAR(MIN(tblVENDAS[DATA]),MAX(tblVENDAS[DATA]))
+
+	annotation PBI_Id = 2e17fc3ddbc9412a9885f8673aed0b02
+

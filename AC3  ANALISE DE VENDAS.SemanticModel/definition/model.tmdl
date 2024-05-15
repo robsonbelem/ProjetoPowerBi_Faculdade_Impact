@@ -1,0 +1,30 @@
+model Model
+	culture: pt-BR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pt-BR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["tblLOJA","tblPRODUTO","tblVENDAS","tblVENDEDOR","tblLatitudeLongitude","INDICADOR","META POR LOJA","META -ANO"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.128.1380.0 (24.04)
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table tblLOJA
+ref table DateTableTemplate_c217095e-358e-4159-88b3-3c5deee2e464
+ref table tblPRODUTO
+ref table tblVENDAS
+ref table tblVENDEDOR
+ref table TblCALENDARIO
+ref table LocalDateTable_8cce442f-c6cf-4c9d-bc7b-6e59dfabd6fd
+ref table MEDIDAS
+ref table tblLatitudeLongitude
+ref table 'TOTAIS  POR PRODUTOS'
+ref table INDICADOR
+ref table 'META POR LOJA'
+ref table 'META -ANO'
+

@@ -1,0 +1,65 @@
+table tblPRODUTO
+	lineageTag: dfd4710e-7bf4-4cde-8885-967b94cbeb49
+
+	column idProduto
+		dataType: int64
+		formatString: 0
+		lineageTag: a7d369b3-d075-4910-a632-7b786d27b2df
+		summarizeBy: none
+		sourceColumn: idProduto
+
+		annotation SummarizationSetBy = Automatic
+
+	column descricaoProduto
+		dataType: string
+		lineageTag: f9b57a9c-49b6-4156-af9c-c568ea835f1c
+		summarizeBy: none
+		sourceColumn: descricaoProduto
+
+		annotation SummarizationSetBy = Automatic
+
+	column custoUnitario
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 34fe1cd5-00cc-423c-9a98-0d48fd74f0ec
+		summarizeBy: none
+		sourceColumn: custoUnitario
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column precoVenda
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: a0b69344-038d-44e6-b323-f3b2b2fc9445
+		summarizeBy: none
+		sourceColumn: precoVenda
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Fornecedor
+		dataType: int64
+		formatString: 0
+		lineageTag: 02420afd-8597-4150-929d-b66b67f18085
+		summarizeBy: none
+		sourceColumn: Fornecedor
+
+		annotation SummarizationSetBy = Automatic
+
+	partition tblPRODUTO-552e6431-cbbb-42d6-afc5-a266e61cc833 = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\robso\OneDrive\Área de Trabalho\PROJETO POWER BI IMPACTA\ProjetoPowerBi_Faculdade_Impact\baseVendas_Normalizado.xlsx"), null, true),
+				    tblPRODUTO_Table = Fonte{[Item="tblPRODUTO",Kind="Table"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(tblPRODUTO_Table,{{"idProduto", Int64.Type}, {"descricaoProduto", type text}, {"custoUnitario", Currency.Type}, {"precoVenda", Currency.Type}, {"Fornecedor", Int64.Type}}),
+				    #"Texto em Maiúscula" = Table.TransformColumns(#"Tipo Alterado",{{"descricaoProduto", Text.Upper, type text}}),
+				    #"Colocar Cada Palavra Em Maiúscula" = Table.TransformColumns(#"Texto em Maiúscula",{{"descricaoProduto", Text.Proper, type text}})
+				in
+				    #"Colocar Cada Palavra Em Maiúscula"
+
+	annotation PBI_ResultType = Table
+

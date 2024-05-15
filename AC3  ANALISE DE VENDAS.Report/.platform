@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "AC3  ANALISE DE VENDAS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e6245be9-8b69-42e8-b0b9-b2886bf02df1"
+  }
+}

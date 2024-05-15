@@ -1,0 +1,49 @@
+relationship eecdc9ca-6006-4239-8d72-dbc2327e4cce
+	fromColumn: tblVENDAS.idLOJA
+	toColumn: tblLOJA.idLoja
+
+relationship b14fc580-75e3-480d-a12c-eb53d21c19fe
+	fromColumn: tblVENDAS.idPRODUTO
+	toColumn: tblPRODUTO.idProduto
+
+relationship 415b4653-a679-40bc-8f77-7951480ca911
+	fromColumn: tblVENDAS.idVENDEDOR
+	toColumn: tblVENDEDOR.idVendedor
+
+relationship 0de848d5-3d8d-400a-8fa8-7fcc7044f66a
+	joinOnDateBehavior: datePartOnly
+	fromColumn: TblCALENDARIO.DATA
+	toColumn: LocalDateTable_8cce442f-c6cf-4c9d-bc7b-6e59dfabd6fd.Date
+
+relationship 5ec91910-e726-4773-8241-216da8b74357
+	fromColumn: tblVENDAS.DATA
+	toColumn: TblCALENDARIO.DATA
+
+relationship 798cb583-9cf7-47ea-85d5-7294baf17e12
+	fromColumn: tblLOJA.CIDADE/UF
+	toColumn: tblLatitudeLongitude.CIDADE/UF
+
+relationship 9f30af85-e41c-4f8c-9676-09e417ae808b
+	fromColumn: 'TOTAIS  POR PRODUTOS'.'INDICADOR STATUS'
+	toColumn: INDICADOR.STATUS
+
+relationship a05a467b-aebf-4ddd-9bf7-7265b2f1a6e0
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'META POR LOJA'.LOJA
+	toColumn: tblLOJA.DescricaoLoja
+
+relationship 4852fd10-f880-44bf-b227-b409e9f9bfa0
+	fromColumn: 'META -ANO'.LOJA
+	toColumn: tblLOJA.DescricaoLoja
+
+relationship 62f63d07-92dd-41b6-b98f-423cec56c850
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: 'META -ANO'.ANO
+	toColumn: TblCALENDARIO.ANO
+
+relationship 950df963-134b-4af2-952f-1f7a168adc30
+	fromColumn: tblVENDAS.'NOME DO PRODUTO'
+	toColumn: 'TOTAIS  POR PRODUTOS'.descricaoProduto
+

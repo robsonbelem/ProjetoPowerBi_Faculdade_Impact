@@ -1,0 +1,41 @@
+table INDICADOR
+	lineageTag: efb3301c-87f9-4eb6-9f68-b55d3c180e4c
+
+	column STATUS
+		dataType: string
+		lineageTag: 132c83c4-7089-4608-8e0a-08d9def7bc2c
+		summarizeBy: none
+		sourceColumn: STATUS
+
+		annotation SummarizationSetBy = Automatic
+
+	column IMAGEM
+		dataType: string
+		lineageTag: 0e01d8c4-5147-43c2-94d0-0f091d1de736
+		summarizeBy: none
+		sourceColumn: IMAGEM
+		sortByColumn: ORDEM
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column ORDEM
+		dataType: string
+		lineageTag: 7a45c551-35d1-40bb-8a6a-f97df1e30f9d
+		summarizeBy: none
+		sourceColumn: ORDEM
+
+		annotation SummarizationSetBy = Automatic
+
+	partition INDICADOR-0da117bd-6c10-4600-9912-fbf05971c39c = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("jc1RC4IwAATgvxJ7jjmnRQQSE1dKmSYqqEkomgqpA2dWvz7Bpx4C7+kODr4oAqplLsASlJyzbisIvMtlWNcwrZoCNjkXeLmrMsUybGiEadMj78hUf1Uk2tNi3p0OeqIn1x4hvGbjj7BqGraCplIq4gaNgATiZQQcevBOxJkH5i8psUnt8vdZa/FNt/WwNQYyZg6IJ9AzzF8N/9HUIAwodmT3Q1vfNfem9MjUy1xNBHH8BQ==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [STATUS = _t, IMAGEM = _t, ORDEM = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"STATUS", type text}, {"IMAGEM", type text}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+

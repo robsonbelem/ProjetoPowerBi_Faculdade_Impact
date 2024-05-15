@@ -1,0 +1,74 @@
+table 'META -ANO'
+	lineageTag: 9c4b0e56-32f4-4572-9301-2c1c401b92cf
+
+	measure 'META ROB' = CALCULATE(MEDIDAS[FATURAMENTO TOTAL],DATEADD(TblCALENDARIO[DATA],-1,YEAR))
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 3d1e3b51-bcd1-4888-96b7-e1195b9c123e
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'PERC MET FA' =
+			IF(ISERROR(MEDIDAS[FATURAMENTO TOTAL] / MEDIDAS[FATURAMENTO  ROB ANO ANTER])
+			              ,BLANK(), (MEDIDAS[FATURAMENTO TOTAL] / MEDIDAS[FATURAMENTO  ROB ANO ANTER]))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 12db459f-9685-48bf-bb2e-1e789513d679
+
+	column META
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 08b71f5b-490b-4893-abb2-af781b53e917
+		summarizeBy: sum
+		sourceColumn: META
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column ANO
+		dataType: int64
+		formatString: 0
+		lineageTag: 74267583-9f6e-49c0-a84f-98d79d73fa6e
+		summarizeBy: none
+		sourceColumn: ANO
+
+		annotation SummarizationSetBy = Automatic
+
+	column LOJA
+		dataType: string
+		lineageTag: 635b49a8-dc97-4b75-84be-2e1b13858183
+		summarizeBy: none
+		sourceColumn: LOJA
+
+		annotation SummarizationSetBy = Automatic
+
+	column MIN = MEDIDAS[FATURAMENTO TOTAL] *0.5
+		dataType: decimal
+		formatString: 0
+		lineageTag: a7c511a7-2ced-46ef-94ca-b4537f87e11f
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	column MAX = MEDIDAS[FATURAMENTO TOTAL] * 3
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: dfeb0ced-729f-4929-b960-f67f1dffd16e
+		summarizeBy: sum
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition 'META -ANO-7dcd56c1-1dbf-4d4f-933b-80fb2324596e' = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("jc4hDsMwDEDRq0TRYDQ5aW13dygarQpGR3Z/toICg7n79OuBv211/bxfRXpttTxvxUTuItJEylGG9Lnu7S9SgowgJ2gJaJxouhpPkRJkBDlBcXw60bgaT5ESZAQ5QXF8JuMpUoKMICcojisZT5ESZAQ5QXHcyHiKlCAjyAmK407GU6QEGUFOUBxfyHiKlCAjyAmK4w8yniIlyAjyH6hfjHfJ0EyQEmQEOUFxvJPxFClBRpATFMcHGU+REmQEOUHH+P4F", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [LOJA = _t, META = _t, ANO = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"META", Currency.Type}, {"ANO", Int64.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_ResultType = Table
+

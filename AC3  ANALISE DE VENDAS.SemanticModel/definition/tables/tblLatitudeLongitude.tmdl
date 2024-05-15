@@ -1,0 +1,84 @@
+table tblLatitudeLongitude
+	lineageTag: 792b59c7-e563-4726-a092-266f4e68cd5f
+
+	column MUNICIPIO
+		dataType: string
+		lineageTag: b1630a1d-d84f-4972-8c6d-060cac1cf72f
+		summarizeBy: none
+		sourceColumn: MUNICIPIO
+
+		annotation SummarizationSetBy = Automatic
+
+	column LATUTUDE
+		dataType: double
+		lineageTag: af204e5e-9461-4e06-bf3e-f012d53d2e4b
+		summarizeBy: none
+		sourceColumn: LATUTUDE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LONGITUDE
+		dataType: double
+		lineageTag: f0201bad-1054-45cb-b03f-a2f4ec362ad8
+		summarizeBy: none
+		sourceColumn: LONGITUDE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UF
+		dataType: string
+		lineageTag: 3079bf0a-c39b-44d8-bcfe-1c606e282ce3
+		summarizeBy: none
+		sourceColumn: UF
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MAPA UF'
+		dataType: string
+		lineageTag: b037abc2-86f3-4ddc-a683-220678db56bd
+		summarizeBy: none
+		sourceColumn: MAPA UF
+
+		annotation SummarizationSetBy = Automatic
+
+	column REGIÃO
+		dataType: string
+		lineageTag: 25cda1a2-755f-4a54-ab8c-3b5f3a39305a
+		summarizeBy: none
+		sourceColumn: REGIÃO
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'MAPA REGIÃO'
+		dataType: string
+		lineageTag: c185e675-9be3-4769-9957-42fa620df089
+		summarizeBy: none
+		sourceColumn: MAPA REGIÃO
+
+		annotation SummarizationSetBy = Automatic
+
+	column CIDADE/UF
+		dataType: string
+		lineageTag: 3e3da41d-bea2-4760-bb9f-93822888030e
+		summarizeBy: none
+		sourceColumn: CIDADE/UF
+
+		annotation SummarizationSetBy = Automatic
+
+	partition tblLatitudeLongitude-2f54a8a1-3837-4105-ad71-73f5e8c9be4c = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\robso\OneDrive\Área de Trabalho\PROJETO POWER BI IMPACTA\ProjetoPowerBi_Faculdade_Impact\Latitude e Longitude.xlsx"), null, true),
+				    tblLatitudeLongitude_Table = Fonte{[Item="tblLatitudeLongitude",Kind="Table"]}[Data],
+				    #"Tipo Alterado" = Table.TransformColumnTypes(tblLatitudeLongitude_Table,{{"MUNICIPIO", type text}, {"LATUTUDE", type number}, {"LONGITUDE", type number}, {"UF", type text}, {"MAPA UF", type text}, {"REGIÃO", type text}, {"MAPA REGIÃO", type text}}),
+				    #"Coluna Mesclada Inserida" = Table.AddColumn(#"Tipo Alterado", "CIDADE/UF", each Text.Combine({[MUNICIPIO], [UF]}, "/"), type text)
+				in
+				    #"Coluna Mesclada Inserida"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "AC3  ANALISE DE VENDAS"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bf6661d7-3057-4c00-871f-124084ccd3e8"
+  }
+}
